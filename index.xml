@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>WwIT</title>
+    <link>https://ww-it.github.io/</link>
+    <description>Recent content on WwIT</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 17 Sep 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://ww-it.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hello Friend</title>
+      <link>https://ww-it.github.io/post/hello/</link>
+      <pubDate>Thu, 17 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://ww-it.github.io/post/hello/</guid>
+      <description>本文将简要介绍如何编写博客文章。本博客系统采用 HUGO 和 hugo-theme-terminal 主题搭建。因此，我们需要安装 HUGO 工具，官网有详细的说明，这里就不在赘述了。
+新建文章 您可以通过如下命令新建一篇博客文章。
+$ hugo new post/your-post-title.md 随后您可以使用任何您喜爱的编辑器对 content/post/your-post-title.md 文件进行编辑，文章支持 markdown 语法。
+预览 在编辑文章的时候，我们可以通过如下命令开启一个 HTTP 服务以便预览我们当前撰写的文章。
+$ hugo server </description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://ww-it.github.io/about/</link>
+      <pubDate>Fri, 25 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ww-it.github.io/about/</guid>
+      <description>Hi there My name is Radek and I&amp;rsquo;m the author of this theme. I made it to help you present your ideas easier.
+We all know how hard is to start something on the web, especially these days. You need to prepare a bunch of stuff, configure them and when that’s done — create the content.
+This theme is pretty basic and covers all of the essentials. All you have to do is start typing!</description>
+    </item>
+    
+    <item>
+      <title>Showcase</title>
+      <link>https://ww-it.github.io/showcase/</link>
+      <pubDate>Wed, 18 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ww-it.github.io/showcase/</guid>
+      <description>Header 2 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec interdum metus. Aenean rutrum ligula sodales ex auctor, sed tempus dui mollis. Curabitur ipsum dui, aliquet nec commodo at, tristique eget ante. Donec quis dolor nec nunc mollis interdum vel in purus. Sed vitae leo scelerisque, sollicitudin elit sed, congue ante. In augue nisl, vestibulum commodo est a, tristique porttitor est. Proin laoreet iaculis ornare. Nullam ut neque quam.</description>
+    </item>
+    
+  </channel>
+</rss>

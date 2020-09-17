@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>hugo on WwIT</title>
+    <link>https://ww-it.github.io/tags/hugo/</link>
+    <description>Recent content in hugo on WwIT</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 17 Sep 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://ww-it.github.io/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hello Friend</title>
+      <link>https://ww-it.github.io/post/hello/</link>
+      <pubDate>Thu, 17 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://ww-it.github.io/post/hello/</guid>
+      <description>本文将简要介绍如何编写博客文章。本博客系统采用 HUGO 和 hugo-theme-terminal 主题搭建。因此，我们需要安装 HUGO 工具，官网有详细的说明，这里就不在赘述了。
+新建文章 您可以通过如下命令新建一篇博客文章。
+$ hugo new post/your-post-title.md 随后您可以使用任何您喜爱的编辑器对 content/post/your-post-title.md 文件进行编辑，文章支持 markdown 语法。
+预览 在编辑文章的时候，我们可以通过如下命令开启一个 HTTP 服务以便预览我们当前撰写的文章。
+$ hugo server </description>
+    </item>
+    
+  </channel>
+</rss>
