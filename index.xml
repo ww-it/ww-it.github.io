@@ -6,10 +6,18 @@
     <description>Recent content on WwIT</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 17 Sep 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://ww-it.github.io/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Fri, 29 Apr 2022 11:23:20 +0800</lastBuildDate><atom:link href="https://ww-it.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CentOS 平台编译 PostgreSQL 数据库</title>
+      <link>https://ww-it.github.io/post/how-to-compile-postgres-on-centos/</link>
+      <pubDate>Fri, 29 Apr 2022 11:23:20 +0800</pubDate>
+      
+      <guid>https://ww-it.github.io/post/how-to-compile-postgres-on-centos/</guid>
+      <description>本文简要介绍如何在 CentOS 上搭建 PostgreSQL 开发环境，以及如何编译 PostgreSQL 数据库。
+安装依赖 由于可能使用不同的 GCC 进行编译，因此我们需要管理 GCC 的版本，好在 CentOS 提供了这样的工具，我们可以使用下面的命令来安装不同的 GCC。
+$ sudo yum install -y centos-release-scl $ sudo yum install -y devtoolset-10 安装完成之后，查看 GCC 版本，如下所示：
+$ gcc --version gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-44) Copyright (C) 2015 Free Software Foundation, Inc. This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</description>
+    </item>
     
     <item>
       <title>Hello Friend</title>

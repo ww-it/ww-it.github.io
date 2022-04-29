@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>CentOS 平台编译 PostgreSQL 数据库 :: WwIT</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="本文简要介绍如何在 CentOS 上搭建 PostgreSQL 开发环境，以及如何编译 PostgreSQL 数据库。
+安装依赖 由于可能使用不同的 GCC 进行编译，因此我们需要管理 GCC 的版本，好在 CentOS 提供了这样的工具，我们可以使用下面的命令来安装不同的 GCC。
+$ sudo yum install -y centos-release-scl $ sudo yum install -y devtoolset-10 安装完成之后，查看 GCC 版本，如下所示：
+$ gcc --version gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-44) Copyright (C) 2015 Free Software Foundation, Inc. This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://ww-it.github.io/post/how-to-compile-postgres-on-centos/" />
+
+
+
+
+<link rel="stylesheet" href="https://ww-it.github.io/assets/style.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://ww-it.github.io/img/apple-touch-icon-144-precomposed.png">
+
+  <link rel="shortcut icon" href="https://ww-it.github.io/img/favicon/orange.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="CentOS 平台编译 PostgreSQL 数据库 :: WwIT">
+<meta property="og:description" content="本文简要介绍如何在 CentOS 上搭建 PostgreSQL 开发环境，以及如何编译 PostgreSQL 数据库。" />
+<meta property="og:url" content="https://ww-it.github.io/post/how-to-compile-postgres-on-centos/" />
+<meta property="og:site_name" content="CentOS 平台编译 PostgreSQL 数据库" />
+
+  
+    <meta property="og:image" content="https://ww-it.github.io/img/favicon/orange.png">
+  
+
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+
+  <meta property="article:published_time" content="2022-04-29 11:23:20 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="orange">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    WwIT
+  </div>
+</a>
+
+    </div>
+    <div class="menu-trigger">menu</div>
+  </div>
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="https://ww-it.github.io/post/how-to-compile-postgres-on-centos/">CentOS 平台编译 PostgreSQL 数据库</a></h1>
+  <div class="post-meta">
+    
+      <span class="post-date">
+        2022-04-29 
+      </span>
+    
+    
+    <span class="post-author">:: Japin Li</span>
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="https://ww-it.github.io/tags/postgresql/">PostgreSQL</a>&nbsp;
+    
+    #<a href="https://ww-it.github.io/tags/centos/">CentOS</a>&nbsp;
+    
+  </span>
+  
+
+  
+
+  
+
+  <div class="post-content"><div>
+        <p>本文简要介绍如何在 CentOS 上搭建 PostgreSQL 开发环境，以及如何编译 PostgreSQL 数据库。</p>
+<h2 id="安装依赖">安装依赖<a href="#安装依赖" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>由于可能使用不同的 GCC 进行编译，因此我们需要管理 GCC 的版本，好在 CentOS 提供了这样的工具，我们可以使用下面的命令来安装不同的 GCC。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ sudo yum install -y centos-release-scl
+$ sudo yum install -y devtoolset-10
+</code></pre></div><p>安装完成之后，查看 GCC 版本，如下所示：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ gcc --version
+gcc <span style="color:#f92672">(</span>GCC<span style="color:#f92672">)</span> 4.8.5 <span style="color:#ae81ff">20150623</span> <span style="color:#f92672">(</span>Red Hat 4.8.5-44<span style="color:#f92672">)</span>
+Copyright <span style="color:#f92672">(</span>C<span style="color:#f92672">)</span> <span style="color:#ae81ff">2015</span> Free Software Foundation, Inc.
+This is free software; see the source <span style="color:#66d9ef">for</span> copying conditions.  There is NO
+warranty; not even <span style="color:#66d9ef">for</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</code></pre></div><p>我们可以通过以下的命令来切换 GCC 版本。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ scl enable devtoolset-10 bash
+$ gcc --version
+gcc <span style="color:#f92672">(</span>GCC<span style="color:#f92672">)</span> 10.2.1 <span style="color:#ae81ff">20210130</span> <span style="color:#f92672">(</span>Red Hat 10.2.1-11<span style="color:#f92672">)</span>
+Copyright <span style="color:#f92672">(</span>C<span style="color:#f92672">)</span> <span style="color:#ae81ff">2020</span> Free Software Foundation, Inc.
+This is free software; see the source <span style="color:#66d9ef">for</span> copying conditions.  There is NO
+warranty; not even <span style="color:#66d9ef">for</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</code></pre></div><p>编译器已经安装好了，接下来需要安装 PostgreSQL 的依赖。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ sudo yum install -y libicu-devel
+$ sudo yum install -y zlib-devel.x86_64
+$ sudo yum install -y openssl-devel.x86_64
+$ sudo yum install -y python3-devel.x86_64
+$ sudo yum install -y perl-Test-Harness-3.28-3.el7.noarch
+$ sudo yum install -y perl-tests.x86_64
+$ sudo yum install -y perl-IPC-Run.noarch
+</code></pre></div><h2 id="编译">编译<a href="#编译" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>经过上面的步骤，我们已经安装好了所需的依赖，接下来可以编译数据库。根据个人的需求，您可能有不同的编译选项（可能需要安装对应的依赖），本文给出一个简单的编译示例。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ ../configure --prefix<span style="color:#f92672">=</span>$PWD/pg --enable-rpath --enable-thread-safety <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --enable-nls --enable-debug --enable-tap-tests --with-icu --with-openssl <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-perl --with-python CFLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;-ggdb -O0&#39;</span>
+$ make -j <span style="color:#ae81ff">32</span> world
+$ make install -s world
+$ make check-world
+</code></pre></div><h2 id="参考">参考<a href="#参考" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>[1] <a href="https://linuxize.com/post/how-to-install-gcc-compiler-on-centos-7/">https://linuxize.com/post/how-to-install-gcc-compiler-on-centos-7/</a></p>
+<h2 id="附录">附录<a href="#附录" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>依赖安装汇总如下所示。</p>
+<pre><code>sudo yum install -y centos-release-scl
+sudo yum install -y devtoolset-10
+sudo yum install -y libicu-devel
+sudo yum install -y zlib-devel.x86_64
+sudo yum install -y openssl-devel.x86_64
+sudo yum install -y python3-devel.x86_64
+sudo yum install -y perl-Test-Harness-3.28-3.el7.noarch
+sudo yum install -y perl-tests.x86_64
+sudo yum install -y perl-IPC-Run.noarch
+</code></pre><p>通常情况下，我建议使用虚拟路径的方式来编译 PostgreSQL，下面是我惯用的编译模式。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cd postgres
+$ mkdir build <span style="color:#f92672">&amp;&amp;</span> cd build
+$ cat <span style="color:#e6db74">&lt;&lt;END &gt; compile.sh
+</span><span style="color:#e6db74">rm -rf \$(ls -I &#39;*.sh&#39;)
+</span><span style="color:#e6db74">cat &lt;&lt;EOF | scl enable devtoolset-10 bash
+</span><span style="color:#e6db74">../configure --prefix=\$PWD/pg \\
+</span><span style="color:#e6db74">  --enable-rpath --enable-thread-safety --enable-nls --enable-debug \\
+</span><span style="color:#e6db74">  --enable-tap-tests \\
+</span><span style="color:#e6db74">  --with-icu --with-openssl --with-perl --with-python \\
+</span><span style="color:#e6db74">  &amp;&amp; \\
+</span><span style="color:#e6db74">make -j 32 world &amp;&amp; make install -s world &amp;&amp; make check-world
+</span><span style="color:#e6db74">EOF
+</span><span style="color:#e6db74">END</span>
+$ chmod +x compile.sh
+</code></pre></div>
+      </div></div>
+
+  
+  
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="https://ww-it.github.io/post/hello/">
+                <span class="button__text">Hello Friend</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+	      <span>© 2022 <a href="https://w3.ww-it.cn/">ChengDu WenWu Information Technology Co.,Ltd.</a></span>
+    
+      </div>
+  </div>
+</footer>
+
+<script src="https://ww-it.github.io/assets/main.js"></script>
+<script src="https://ww-it.github.io/assets/prism.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
