@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Ubuntu 平台交叉编译 Qt SQLite 动态库 :: WwIT</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="本文简要记录一下如何在 Ubuntu 平台交叉编译 MIPS 平台的 Qt SQLite 动态库。
+交叉编译工具 首先，我们需要安装交叉编译工具。我们使用 mips-gcc520-glibc222.tgz 二进制包进行安装。
+$ tar xf mips-gcc520-glibc222.tgz -C /opt $ ls -al /opt/mips-gcc520-glibc222/ total 44 drwxr-xr-x 8 root root 4096 Mar 16 2018 . drwxr-xr-x 3 root root 4096 May 16 11:31 .. drwxr-xr-x 2 root root 4096 Jun 6 2019 bin drwxr-xr-x 3 root root 4096 Mar 16 2018 i686-pc-linux-gnu drwxr-xr-x 3 root root 4096 Mar 16 2018 lib drwxr-xr-x 3 root root 4096 Mar 16 2018 libexec drwxr-xr-x 7 root root 4096 Mar 16 2018 mips-linux-gnu drwxr-xr-x 5 root root 4096 Mar 16 2018 share -rw-r--r-- 1 root root 2613 Mar 16 2018 ." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://ww-it.github.io/post/qt-everywhere-cross-compile-with-sqlite/" />
+
+
+
+
+<link rel="stylesheet" href="https://ww-it.github.io/assets/style.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://ww-it.github.io/img/apple-touch-icon-144-precomposed.png">
+
+  <link rel="shortcut icon" href="https://ww-it.github.io/img/favicon/orange.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Ubuntu 平台交叉编译 Qt SQLite 动态库 :: WwIT">
+<meta property="og:description" content="本文简要记录一下如何在 Ubuntu 平台交叉编译 MIPS 平台的 Qt SQLite 动态库。" />
+<meta property="og:url" content="https://ww-it.github.io/post/qt-everywhere-cross-compile-with-sqlite/" />
+<meta property="og:site_name" content="Ubuntu 平台交叉编译 Qt SQLite 动态库" />
+
+  
+    <meta property="og:image" content="https://ww-it.github.io/img/favicon/orange.png">
+  
+
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+
+  <meta property="article:published_time" content="2022-05-17 11:01:07 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="orange">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    WwIT
+  </div>
+</a>
+
+    </div>
+    <div class="menu-trigger">menu</div>
+  </div>
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="https://ww-it.github.io/post/qt-everywhere-cross-compile-with-sqlite/">Ubuntu 平台交叉编译 Qt SQLite 动态库</a></h1>
+  <div class="post-meta">
+    
+      <span class="post-date">
+        2022-05-17 
+      </span>
+    
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="https://ww-it.github.io/tags/ubuntu/">Ubuntu</a>&nbsp;
+    
+    #<a href="https://ww-it.github.io/tags/sqlite/">SQLite</a>&nbsp;
+    
+    #<a href="https://ww-it.github.io/tags/qt/">Qt</a>&nbsp;
+    
+  </span>
+  
+
+  
+
+  
+
+  <div class="post-content"><div>
+        <p>本文简要记录一下如何在 Ubuntu 平台交叉编译 MIPS 平台的 Qt SQLite 动态库。</p>
+<h2 id="交叉编译工具">交叉编译工具<a href="#交叉编译工具" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>首先，我们需要安装交叉编译工具。我们使用 <code>mips-gcc520-glibc222.tgz</code> 二进制包进行安装。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ tar xf mips-gcc520-glibc222.tgz -C /opt
+$ ls -al /opt/mips-gcc520-glibc222/
+total <span style="color:#ae81ff">44</span>
+drwxr-xr-x <span style="color:#ae81ff">8</span> root root  <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">16</span>  <span style="color:#ae81ff">2018</span> .
+drwxr-xr-x <span style="color:#ae81ff">3</span> root root  <span style="color:#ae81ff">4096</span> May <span style="color:#ae81ff">16</span> 11:31 ..
+drwxr-xr-x <span style="color:#ae81ff">2</span> root root  <span style="color:#ae81ff">4096</span> Jun  <span style="color:#ae81ff">6</span>  <span style="color:#ae81ff">2019</span> bin
+drwxr-xr-x <span style="color:#ae81ff">3</span> root root  <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">16</span>  <span style="color:#ae81ff">2018</span> i686-pc-linux-gnu
+drwxr-xr-x <span style="color:#ae81ff">3</span> root root  <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">16</span>  <span style="color:#ae81ff">2018</span> lib
+drwxr-xr-x <span style="color:#ae81ff">3</span> root root  <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">16</span>  <span style="color:#ae81ff">2018</span> libexec
+drwxr-xr-x <span style="color:#ae81ff">7</span> root root  <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">16</span>  <span style="color:#ae81ff">2018</span> mips-linux-gnu
+drwxr-xr-x <span style="color:#ae81ff">5</span> root root  <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">16</span>  <span style="color:#ae81ff">2018</span> share
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root  <span style="color:#ae81ff">2613</span> Mar <span style="color:#ae81ff">16</span>  <span style="color:#ae81ff">2018</span> .SOURCE
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root  <span style="color:#ae81ff">3345</span> Mar <span style="color:#ae81ff">16</span>  <span style="color:#ae81ff">2018</span> .UPDATE
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root    <span style="color:#ae81ff">43</span> Mar <span style="color:#ae81ff">16</span>  <span style="color:#ae81ff">2018</span> VERSION
+</code></pre></div><h2 id="qt-源码编译安装">Qt 源码编译安装<a href="#qt-源码编译安装" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>接着从 Qt 官网下载源码，此处我选择使用 <a href="https://download.qt.io/archive/qt/5.12/5.12.3/single/">qt-everywhere-src-5.12.3</a>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ tar xf qt-everywhere-src-5.12.3.tar.xz
+$ ls -l qt-everywhere-src-5.12.3
+total <span style="color:#ae81ff">352</span>
+-rw-rw-r--  <span style="color:#ae81ff">1</span> japin japin  <span style="color:#ae81ff">2845</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> _clang-format
+drwxrwxr-x  <span style="color:#ae81ff">5</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> coin
+-rwxrwxr-x  <span style="color:#ae81ff">1</span> japin japin  <span style="color:#ae81ff">1935</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> configure
+-rw-rw-r--  <span style="color:#ae81ff">1</span> japin japin  <span style="color:#ae81ff">1980</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> configure.bat
+-rw-rw-r--  <span style="color:#ae81ff">1</span> japin japin    <span style="color:#ae81ff">94</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> configure.json
+drwxrwxr-x  <span style="color:#ae81ff">9</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> gnuwin32
+-rw-rw-r--  <span style="color:#ae81ff">1</span> japin japin <span style="color:#ae81ff">22961</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> LICENSE.FDL
+-rw-rw-r--  <span style="color:#ae81ff">1</span> japin japin <span style="color:#ae81ff">15351</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> LICENSE.GPLv2
+-rw-rw-r--  <span style="color:#ae81ff">1</span> japin japin <span style="color:#ae81ff">35641</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> LICENSE.GPLv3
+-rw-rw-r--  <span style="color:#ae81ff">1</span> japin japin <span style="color:#ae81ff">26828</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> LICENSE.LGPLv21
+-rw-rw-r--  <span style="color:#ae81ff">1</span> japin japin  <span style="color:#ae81ff">8174</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> LICENSE.LGPLv3
+-rw-rw-r--  <span style="color:#ae81ff">1</span> japin japin <span style="color:#ae81ff">46903</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> LICENSE.QT-LICENSE-AGREEMENT-4.0
+drwxrwxr-x <span style="color:#ae81ff">10</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qt3d
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtactiveqt
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtandroidextras
+drwxrwxr-x <span style="color:#ae81ff">14</span> japin japin  <span style="color:#ae81ff">4096</span> May <span style="color:#ae81ff">17</span> 10:15 qtbase
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtcanvas3d
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtcharts
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtconnectivity
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtdatavis3d
+drwxrwxr-x <span style="color:#ae81ff">10</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtdeclarative
+drwxrwxr-x  <span style="color:#ae81ff">6</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtdoc
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtgamepad
+drwxrwxr-x  <span style="color:#ae81ff">6</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtgraphicaleffects
+drwxrwxr-x  <span style="color:#ae81ff">6</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtimageformats
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtlocation
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtmacextras
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtmultimedia
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtnetworkauth
+-rw-rw-r--  <span style="color:#ae81ff">1</span> japin japin  <span style="color:#ae81ff">2962</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> qt.pro
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtpurchasing
+drwxrwxr-x  <span style="color:#ae81ff">6</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtquickcontrols
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtquickcontrols2
+drwxrwxr-x  <span style="color:#ae81ff">9</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtremoteobjects
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtscript
+drwxrwxr-x  <span style="color:#ae81ff">9</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtscxml
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtsensors
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtserialbus
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtserialport
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtspeech
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtsvg
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qttools
+drwxrwxr-x  <span style="color:#ae81ff">3</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qttranslations
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtvirtualkeyboard
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtwayland
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtwebchannel
+drwxrwxr-x <span style="color:#ae81ff">10</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtwebengine
+drwxrwxr-x  <span style="color:#ae81ff">5</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtwebglplugin
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtwebsockets
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtwebview
+drwxrwxr-x  <span style="color:#ae81ff">7</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtwinextras
+drwxrwxr-x  <span style="color:#ae81ff">6</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtx11extras
+drwxrwxr-x  <span style="color:#ae81ff">8</span> japin japin  <span style="color:#ae81ff">4096</span> Apr <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2019</span> qtxmlpatterns
+-rw-rw-r--  <span style="color:#ae81ff">1</span> japin japin  <span style="color:#ae81ff">3842</span> Apr <span style="color:#ae81ff">11</span>  <span style="color:#ae81ff">2019</span> README
+</code></pre></div><p>随后，我们便可以对其进行编译了，我们先尝试在 x86-64 平台编译。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ mkdir x86-64-build <span style="color:#f92672">&amp;&amp;</span> cd x86-64-build
+$ ../configure <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-prefix $PWD/qt-x86/ <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-mp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-release <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-shared <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-confirm-license <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-opensource <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-c++std c++11 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-qt-sqlite <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-no-opengl <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-nomake examples <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-nomake tools <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-nomake tests <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-no-sse2 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-no-cups <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-no-iconv <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-no-openssl
+make -j4 -s
+make install
+</code></pre></div><p>整个编译过程比较久，可以先去喝杯咖啡再来。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ find . -name libqsqlite.so
+./qtbase/plugins/sqldrivers/libqsqlite.so
+$ file <span style="color:#66d9ef">$(</span>find . -name libqsqlite.so<span style="color:#66d9ef">)</span>
+./qtbase/plugins/sqldrivers/libqsqlite.so: ELF 64-bit LSB shared object, x86-64, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, dynamically linked, BuildID<span style="color:#f92672">[</span>sha1<span style="color:#f92672">]=</span>f06c0992b7ffe4d438df0e065511564b1ef238a7, not stripped
+</code></pre></div><h2 id="交叉编译">交叉编译<a href="#交叉编译" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>MIPS 的交叉编译工具已经安装了，并且在 x86-64 平台也成功编译了 <code>qt-sqlite</code>，现在我们尝试编译 MIPS 平台的 <code>qt-sqlite</code>。我们需要在 <code>qtbase/mkspecs/</code> 目录下添加上 MIPS 平台相关的信息。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ mkdir qtbase/mkspecs/linux-mips-gnu-g++ <span style="color:#f92672">&amp;&amp;</span> cd qtbase/mkspecs/linux-mips-gnu-g++
+
+$ cat <span style="color:#e6db74">&lt;&lt;EOF &gt; qmake.conf
+</span><span style="color:#e6db74">#
+</span><span style="color:#e6db74"># qmake configuration for building with arm-linux-gnueabi-g++
+</span><span style="color:#e6db74">#
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">MAKEFILE_GENERATOR      = UNIX
+</span><span style="color:#e6db74">CONFIG                 += incremental
+</span><span style="color:#e6db74">QMAKE_INCREMENTAL_STYLE = sublib
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">include(../common/linux.conf)
+</span><span style="color:#e6db74">include(../common/gcc-base-unix.conf)
+</span><span style="color:#e6db74">include(../common/g++-unix.conf)
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"># modifications to g++.conf
+</span><span style="color:#e6db74">QMAKE_CC                = mips-linux-gnu-gcc
+</span><span style="color:#e6db74">QMAKE_CXX               = mips-linux-gnu-g++
+</span><span style="color:#e6db74">QMAKE_LINK              = mips-linux-gnu-g++
+</span><span style="color:#e6db74">QMAKE_LINK_SHLIB        = mips-linux-gnu-g++
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"># modifications to linux.conf
+</span><span style="color:#e6db74">QMAKE_AR                = mips-linux-gnu-ar cqs
+</span><span style="color:#e6db74">QMAKE_OBJCOPY           = mips-linux-gnu-objcopy
+</span><span style="color:#e6db74">QMAKE_NM                = mips-linux-gnu-nm -P
+</span><span style="color:#e6db74">QMAKE_STRIP             = mips-linux-gnu-strip
+</span><span style="color:#e6db74">load(qt_config)
+</span><span style="color:#e6db74">EOF</span>
+
+$ cat <span style="color:#e6db74">&lt;&lt;EOF &gt; qplatformdefs.h
+</span><span style="color:#e6db74">/****************************************************************************
+</span><span style="color:#e6db74">**
+</span><span style="color:#e6db74">** Copyright (C) 2016 The Qt Company Ltd.
+</span><span style="color:#e6db74">** Contact: https://www.qt.io/licensing/
+</span><span style="color:#e6db74">**
+</span><span style="color:#e6db74">** This file is part of the qmake spec of the Qt Toolkit.
+</span><span style="color:#e6db74">**
+</span><span style="color:#e6db74">** $QT_BEGIN_LICENSE:LGPL$
+</span><span style="color:#e6db74">** Commercial License Usage
+</span><span style="color:#e6db74">** Licensees holding valid commercial Qt licenses may use this file in
+</span><span style="color:#e6db74">** accordance with the commercial license agreement provided with the
+</span><span style="color:#e6db74">** Software or, alternatively, in accordance with the terms contained in
+</span><span style="color:#e6db74">** a written agreement between you and The Qt Company. For licensing terms
+</span><span style="color:#e6db74">** and conditions see https://www.qt.io/terms-conditions. For further
+</span><span style="color:#e6db74">** information use the contact form at https://www.qt.io/contact-us.
+</span><span style="color:#e6db74">**
+</span><span style="color:#e6db74">** GNU Lesser General Public License Usage
+</span><span style="color:#e6db74">** Alternatively, this file may be used under the terms of the GNU Lesser
+</span><span style="color:#e6db74">** General Public License version 3 as published by the Free Software
+</span><span style="color:#e6db74">** Foundation and appearing in the file LICENSE.LGPL3 included in the
+</span><span style="color:#e6db74">** packaging of this file. Please review the following information to
+</span><span style="color:#e6db74">** ensure the GNU Lesser General Public License version 3 requirements
+</span><span style="color:#e6db74">** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
+</span><span style="color:#e6db74">**
+</span><span style="color:#e6db74">** GNU General Public License Usage
+</span><span style="color:#e6db74">** Alternatively, this file may be used under the terms of the GNU
+</span><span style="color:#e6db74">** General Public License version 2.0 or (at your option) the GNU General
+</span><span style="color:#e6db74">** Public license version 3 or any later version approved by the KDE Free
+</span><span style="color:#e6db74">** Qt Foundation. The licenses are as published by the Free Software
+</span><span style="color:#e6db74">** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
+</span><span style="color:#e6db74">** included in the packaging of this file. Please review the following
+</span><span style="color:#e6db74">** information to ensure the GNU General Public License requirements will
+</span><span style="color:#e6db74">** be met: https://www.gnu.org/licenses/gpl-2.0.html and
+</span><span style="color:#e6db74">** https://www.gnu.org/licenses/gpl-3.0.html.
+</span><span style="color:#e6db74">**
+</span><span style="color:#e6db74">** $QT_END_LICENSE$
+</span><span style="color:#e6db74">**
+</span><span style="color:#e6db74">****************************************************************************/
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">#include &#34;../linux-g++/qplatformdefs.h&#34;
+</span><span style="color:#e6db74">EOF</span>
+
+$ cd -
+</code></pre></div><p><code>qmake.conf</code> 指定了使用的编译工具，<code>qplatformdefs.h</code> 则给出了需要依赖的头文件。</p>
+<p>现在，我们便可以编译 MIPS 平台的 <code>qt-sqlite</code> 了。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ mkdir mips-build
+$ export PATH<span style="color:#f92672">=</span>/opt/mips-gcc520-glibc222/bin:$PATH
+$ ../configure <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-prefix $PWD/qt-mips/ <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-mp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-release <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-shared <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-xplatform linux-mips-gnu-g++ <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-confirm-license <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-opensource <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-c++std c++11 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-qt-sqlite <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-no-opengl <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-nomake examples <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-nomake tools <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-nomake tests <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-no-sse2 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-no-cups <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-no-iconv <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>       	-no-openssl
+make -j4 -s
+make install
+</code></pre></div><p>编译完成之后可以看到如下信息。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ find . -name libqsqlite.so
+./qtbase/plugins/sqldrivers/libqsqlite.so
+$ file <span style="color:#66d9ef">$(</span>find . -name libqsqlite.so<span style="color:#66d9ef">)</span>
+./qtbase/plugins/sqldrivers/libqsqlite.so: ELF 32-bit LSB shared object, MIPS, MIPS32 rel2 version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, dynamically linked, not stripped
+</code></pre></div><h2 id="后记">后记<a href="#后记" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>由于我们并不是使用标准的 SQLite，因此我们将其替换，在我们的 SQLite 中使用了额外的动态库。为了能顺利通过编译，我们需要执行动态库的路径，我当前的做法是通过修改 <code>qtbase/src/3rdparty/sqlite.pri</code> 来实现的（暂时没有找到更好的解决方案），即在该文件中加入如下内容：</p>
+<pre><code>LIBS +=         -L/path/to/lib/dir
+LIBS +=         -lmylib
+</code></pre><p>注意：这里我没有将其写在一行，这是因为当写成 <code>LIBS += &quot;-L/path/to/lib/dir -lmylib&quot;</code> 时，Qt 在处理的时候会将其转换为 <code>-L/path/to/lib/dir\\ -lmylib</code>，从而导致无法正确的找到动态库路径。</p>
+
+      </div></div>
+
+  
+  
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="https://ww-it.github.io/post/how-to-compile-postgres-on-centos/">
+                <span class="button__text">CentOS 平台编译 PostgreSQL 数据库</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+	      <span>© 2022 <a href="https://w3.ww-it.cn/">ChengDu WenWu Information Technology Co.,Ltd.</a></span>
+    
+      </div>
+  </div>
+</footer>
+
+<script src="https://ww-it.github.io/assets/main.js"></script>
+<script src="https://ww-it.github.io/assets/prism.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
