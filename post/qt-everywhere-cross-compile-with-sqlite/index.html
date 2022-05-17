@@ -322,10 +322,8 @@ $ file <span style="color:#66d9ef">$(</span>find . -name libqsqlite.so<span styl
 ./qtbase/plugins/sqldrivers/libqsqlite.so: ELF 32-bit LSB shared object, MIPS, MIPS32 rel2 version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, dynamically linked, not stripped
 </code></pre></div><h2 id="后记">后记<a href="#后记" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>由于我们并不是使用标准的 SQLite，因此我们将其替换，在我们的 SQLite 中使用了额外的动态库。为了能顺利通过编译，我们需要执行动态库的路径，我当前的做法是通过修改 <code>qtbase/src/3rdparty/sqlite.pri</code> 来实现的（暂时没有找到更好的解决方案），即在该文件中加入如下内容：</p>
-<pre><code>LIBS +=         -L/path/to/lib/dir
-LIBS +=         -lmylib
-</code></pre><p>注意：这里我没有将其写在一行，这是因为当写成 <code>LIBS += &quot;-L/path/to/lib/dir -lmylib&quot;</code> 时，Qt 在处理的时候会将其转换为 <code>-L/path/to/lib/dir\\ -lmylib</code>，从而导致无法正确的找到动态库路径。</p>
-
+<pre><code>LIBS +=         -L/path/to/lib/dir -lmylib
+</code></pre>
       </div></div>
 
   
