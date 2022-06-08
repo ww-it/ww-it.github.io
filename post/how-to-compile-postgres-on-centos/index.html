@@ -149,6 +149,8 @@ $ sudo yum install -y perl-IPC-Run.noarch
 $ make -j <span style="color:#ae81ff">32</span> world
 $ make install -s world
 $ make check-world
+</code></pre></div><p>此外，为了方便查看文档，我们可以安装 <code>man-pages</code>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ sudo yum install -y man-pages
 </code></pre></div><h2 id="参考">参考<a href="#参考" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>[1] <a href="https://linuxize.com/post/how-to-install-gcc-compiler-on-centos-7/">https://linuxize.com/post/how-to-install-gcc-compiler-on-centos-7/</a></p>
 <h2 id="附录">附录<a href="#附录" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
@@ -162,7 +164,10 @@ sudo yum install -y python3-devel.x86_64
 sudo yum install -y perl-Test-Harness-3.28-3.el7.noarch
 sudo yum install -y perl-tests.x86_64
 sudo yum install -y perl-IPC-Run.noarch
-</code></pre><p>通常情况下，我建议使用虚拟路径的方式来编译 PostgreSQL，下面是我惯用的编译模式。</p>
+</code></pre><p>如果是不能使用 yum 方式安装 <code>perl-IPC-RUN</code>，我们还可以使用 <code>cpan</code> 进行安装。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cpan
+cpan<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>&gt; install IPC::Run
+</code></pre></div><p>通常情况下，我建议使用虚拟路径的方式来编译 PostgreSQL，下面是我惯用的编译模式。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cd postgres
 $ mkdir build <span style="color:#f92672">&amp;&amp;</span> cd build
 $ cat <span style="color:#e6db74">&lt;&lt;END &gt; compile.sh
