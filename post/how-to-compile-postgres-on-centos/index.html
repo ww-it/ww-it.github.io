@@ -180,6 +180,9 @@ sudo yum install -y llvm-toolset-7.0-llvm-devel.x86_64
 sudo yum install -y perl-Test-Harness-3.28-3.el7.noarch
 sudo yum install -y perl-tests.x86_64
 sudo yum install -y perl-IPC-Run.noarch
+
+<span style="color:#75715e"># make a RPM package</span>
+sudo yum install -y rpmdevtools.noarch
 </code></pre></div><p>默认情况下，git 版本有点老了，可以使用下面的命令安装新版本的 git。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo yum -y remove git
 sudo yum -y install https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo.x86_64.rpm
