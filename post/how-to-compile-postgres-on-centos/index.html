@@ -151,8 +151,42 @@ $ make install -s world
 $ make check-world
 </code></pre></div><p>此外，为了方便查看文档，我们可以安装 <code>man-pages</code>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ sudo yum install -y man-pages
+</code></pre></div><h2 id="hunghudb-依赖">HunghuDB 依赖<a href="#hunghudb-依赖" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo yum install -y centos-release-scl
+sudo yum install -y devtoolset-11
+sudo yum install -y git
+
+sudo yum install -y zlib-devel.x86_64
+sudo yum install -y readline-devel.x86_64
+
+sudo yum install -y devtoolset-11-systemtap-sdt-devel  <span style="color:#75715e"># --enable-dtrace</span>
+sudo yum install -y llvm-toolset-7-llvm-devel.x86_64   <span style="color:#75715e"># --with-llvm</span>
+sudo yum install -y libicu-devel                       <span style="color:#75715e"># --with-icu</span>
+sudo yum install -y numactl-devel.x86_64               <span style="color:#75715e"># --with-numa</span>
+sudo yum install -y lz4-devel.x86_64                   <span style="color:#75715e"># --wit-lz4</span>
+sudo yum install -y openssl-devel.x86_64               <span style="color:#75715e"># --with-openssl</span>
+sudo yum install -y python3-devel.x86_64               <span style="color:#75715e"># --with-python</span>
+sudo yum install -y pam-devel.x86_64                   <span style="color:#75715e"># --with-pam</span>
+sudo yum install -y libxml2-devel.x86_64               <span style="color:#75715e"># --with-libxml</span>
+sudo yum install -y krb5-devel.x86_64                  <span style="color:#75715e"># --with-gssapi</span>
+sudo yum install -y libxslt-devel.x86_64               <span style="color:#75715e"># --with-libxslt</span>
+sudo yum install -y openldap-devel.x86_64              <span style="color:#75715e"># --with-ldap</span>
+sudo yum install -y libuuid-devel.x86_64               <span style="color:#75715e"># --with-uuid=e2fs</span>
+sudo yum install -y systemd-devel.x86_64               <span style="color:#75715e"># --with-systemd</span>
+sudo yum install -y llvm-toolset-7.0.x86_64            <span style="color:#75715e"># --with-llvm</span>
+sudo yum install -y llvm-toolset-7.0-llvm-devel.x86_64
+
+<span style="color:#75715e"># regression test</span>
+sudo yum install -y perl-Test-Harness-3.28-3.el7.noarch
+sudo yum install -y perl-tests.x86_64
+sudo yum install -y perl-IPC-Run.noarch
+</code></pre></div><p>默认情况下，git 版本有点老了，可以使用下面的命令安装新版本的 git。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo yum -y remove git
+sudo yum -y install https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo.x86_64.rpm
+sudo yum -y install git
 </code></pre></div><h2 id="参考">参考<a href="#参考" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>[1] <a href="https://linuxize.com/post/how-to-install-gcc-compiler-on-centos-7/">https://linuxize.com/post/how-to-install-gcc-compiler-on-centos-7/</a></p>
+<p>[1] <a href="https://linuxize.com/post/how-to-install-gcc-compiler-on-centos-7/">https://linuxize.com/post/how-to-install-gcc-compiler-on-centos-7/</a>
+[2] <a href="https://computingforgeeks.com/how-to-install-latest-version-of-git-git-2-x-on-centos-7/">https://computingforgeeks.com/how-to-install-latest-version-of-git-git-2-x-on-centos-7/</a></p>
 <h2 id="附录">附录<a href="#附录" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>依赖安装汇总如下所示。</p>
 <pre><code>sudo yum install -y centos-release-scl
