@@ -6,7 +6,22 @@
     <description>Recent content on WwIT</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 25 Nov 2022 11:09:20 +0800</lastBuildDate><atom:link href="https://ww-it.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Nov 2022 15:32:20 +0800</lastBuildDate><atom:link href="https://ww-it.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SmartOS 平台编译 EcoX</title>
+      <link>https://ww-it.github.io/post/how-to-compile-ecox-on-smartos/</link>
+      <pubDate>Mon, 28 Nov 2022 15:32:20 +0800</pubDate>
+      
+      <guid>https://ww-it.github.io/post/how-to-compile-ecox-on-smartos/</guid>
+      <description>本文简要介绍如何在 SmartOS 上搭建 EcoX 开发环境，以及如何编译 EcoX。
+准备工作 EcoX 的编译需要使用到 autoconf 和 automake 工具，如果从代码库拉取代码，则还需要用到 git 工具。
+# pkgin -y in autoconf # pkgin -y in automake # pkgin -y in git 安装依赖 EcoX 依赖 PostgreSQL 的 libpq 库、Zookeeper 的 C 库以及 Log4c 日志库。
+Zookeeper 依赖 SmartOS 的软件源中提供了 Zookeeper 库，我们可以通过下面的命令直接安装。
+# pkgin -y in libzookeeper-3.4.12 版本号可能不对，可以通过 pkgin se zookeeper 先进行搜索，确定软件包的名称。
+Log4c 依赖 SmartOS 的软件源中并不包含 Log4c 库，因此，我们需要从源码编译安装，我们可以使用下面的命令进行编译安装。
+$ wget http://prdownloads.sourceforge.net/log4c/log4c-1.2.4.tar.gz $ tar zxf log4c-1.</description>
+    </item>
+    
     <item>
       <title>SmartOS 平台编译 PostgreSQL 数据库</title>
       <link>https://ww-it.github.io/post/how-to-compile-postgres-on-smartos/</link>

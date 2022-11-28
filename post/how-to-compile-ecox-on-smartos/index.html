@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>SmartOS 平台编译 EcoX :: WwIT</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="本文简要介绍如何在 SmartOS 上搭建 EcoX 开发环境，以及如何编译 EcoX。
+准备工作 EcoX 的编译需要使用到 autoconf 和 automake 工具，如果从代码库拉取代码，则还需要用到 git 工具。
+# pkgin -y in autoconf # pkgin -y in automake # pkgin -y in git 安装依赖 EcoX 依赖 PostgreSQL 的 libpq 库、Zookeeper 的 C 库以及 Log4c 日志库。
+Zookeeper 依赖 SmartOS 的软件源中提供了 Zookeeper 库，我们可以通过下面的命令直接安装。
+# pkgin -y in libzookeeper-3.4.12 版本号可能不对，可以通过 pkgin se zookeeper 先进行搜索，确定软件包的名称。
+Log4c 依赖 SmartOS 的软件源中并不包含 Log4c 库，因此，我们需要从源码编译安装，我们可以使用下面的命令进行编译安装。
+$ wget http://prdownloads.sourceforge.net/log4c/log4c-1.2.4.tar.gz $ tar zxf log4c-1." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://ww-it.github.io/post/how-to-compile-ecox-on-smartos/" />
+
+
+
+
+<link rel="stylesheet" href="https://ww-it.github.io/assets/style.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://ww-it.github.io/img/apple-touch-icon-144-precomposed.png">
+
+  <link rel="shortcut icon" href="https://ww-it.github.io/img/favicon/orange.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="SmartOS 平台编译 EcoX :: WwIT">
+<meta property="og:description" content="本文简要介绍如何在 SmartOS 上搭建 EcoX 开发环境，以及如何编译 EcoX。" />
+<meta property="og:url" content="https://ww-it.github.io/post/how-to-compile-ecox-on-smartos/" />
+<meta property="og:site_name" content="SmartOS 平台编译 EcoX" />
+
+  
+    <meta property="og:image" content="https://ww-it.github.io/img/favicon/orange.png">
+  
+
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+
+  <meta property="article:published_time" content="2022-11-28 15:32:20 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="orange">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    WwIT
+  </div>
+</a>
+
+    </div>
+    <div class="menu-trigger">menu</div>
+  </div>
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="https://ww-it.github.io/post/how-to-compile-ecox-on-smartos/">SmartOS 平台编译 EcoX</a></h1>
+  <div class="post-meta">
+    
+      <span class="post-date">
+        2022-11-28 
+      </span>
+    
+    
+    <span class="post-author">:: Japin Li</span>
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="https://ww-it.github.io/tags/ecox/">EcoX</a>&nbsp;
+    
+    #<a href="https://ww-it.github.io/tags/smartos/">SmartOS</a>&nbsp;
+    
+  </span>
+  
+
+  
+
+  
+
+  <div class="post-content"><div>
+        <p>本文简要介绍如何在 SmartOS 上搭建 EcoX 开发环境，以及如何编译 EcoX。</p>
+<h2 id="准备工作">准备工作<a href="#准备工作" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>EcoX 的编译需要使用到 autoconf 和 automake 工具，如果从代码库拉取代码，则还需要用到 git 工具。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># pkgin -y in autoconf</span>
+<span style="color:#75715e"># pkgin -y in automake</span>
+<span style="color:#75715e"># pkgin -y in git</span>
+</code></pre></div><h2 id="安装依赖">安装依赖<a href="#安装依赖" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>EcoX 依赖 PostgreSQL 的 libpq 库、Zookeeper 的 C 库以及 <a href="https://log4c.sourceforge.net/">Log4c</a> 日志库。</p>
+<h3 id="zookeeper-依赖">Zookeeper 依赖<a href="#zookeeper-依赖" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>SmartOS 的软件源中提供了 Zookeeper 库，我们可以通过下面的命令直接安装。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># pkgin -y in libzookeeper-3.4.12</span>
+</code></pre></div><p>版本号可能不对，可以通过 <code>pkgin se zookeeper</code> 先进行搜索，确定软件包的名称。</p>
+<h3 id="log4c-依赖"><a href="https://log4c.sourceforge.net/">Log4c</a> 依赖<a href="#log4c-依赖" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>SmartOS 的软件源中并不包含 <a href="https://log4c.sourceforge.net/">Log4c</a> 库，因此，我们需要从源码编译安装，我们可以使用下面的命令进行编译安装。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ wget http://prdownloads.sourceforge.net/log4c/log4c-1.2.4.tar.gz
+$ tar zxf log4c-1.2.4.tar.gz
+$ cd log4c-1.2.4/
+$ ./configure --prefix<span style="color:#f92672">=</span>/opt/local
+$ make
+$ make install
+</code></pre></div><h3 id="postgresql-依赖">PostgreSQL 依赖<a href="#postgresql-依赖" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>EcoX 依赖 <code>pg_config</code> 来确定 libpq 的位置。之前已经有关于 PostgreSQL 的文档说明，这里就不在赘述。</p>
+<h2 id="ecox-编译">EcoX 编译<a href="#ecox-编译" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>配置好环境之后，使用下面的命令编译 EcoX。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git clone https://gitlab.ww-it.cn/ecox/ecox.git
+$ cd ecox
+$ ./bootstrap.sh
+$ mkdir build
+$ cd build
+$ make
+$ make install
+</code></pre></div>
+      </div></div>
+
+  
+  
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="https://ww-it.github.io/post/how-to-compile-postgres-on-smartos/">
+                <span class="button__text">SmartOS 平台编译 PostgreSQL 数据库</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+	      <span>© 2022 <a href="https://w3.ww-it.cn/">ChengDu WenWu Information Technology Co.,Ltd.</a></span>
+    
+      </div>
+  </div>
+</footer>
+
+<script src="https://ww-it.github.io/assets/main.js"></script>
+<script src="https://ww-it.github.io/assets/prism.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
