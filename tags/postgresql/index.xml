@@ -6,7 +6,18 @@
     <description>Recent content in PostgreSQL on WwIT</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 25 Nov 2022 11:09:20 +0800</lastBuildDate><atom:link href="https://ww-it.github.io/tags/postgresql/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 14 Dec 2022 11:04:48 +0800</lastBuildDate><atom:link href="https://ww-it.github.io/tags/postgresql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>FreeBSD 平台编译 PostgreSQL 数据库</title>
+      <link>https://ww-it.github.io/post/how-to-compile-postgres-on-freebsd/</link>
+      <pubDate>Wed, 14 Dec 2022 11:04:48 +0800</pubDate>
+      
+      <guid>https://ww-it.github.io/post/how-to-compile-postgres-on-freebsd/</guid>
+      <description>本文简要介绍如何在 FreeBSD 上搭建 PostgreSQL 开发环境，以及如何编译 PostgreSQL 数据库。
+安装依赖 首先安装依赖，使用下面的命令我们可以安装本次实验所需的依赖，如果您需要添加额外的编译选项，您可能还需要安装其他依赖。
+# pkg install -y gcc11-11.3.0_7 # pkg install -y gmake-4.3_2 # pkg install -y flex-2.6.4_2 # pkg install -y bison-3.8.2,1 # pkg install -y pkgconf # pkg install -y gettext-tools-0.21.1 # pkg install -y icu-72.1,1 # --with-icu # pkg install -y libxml2-2.10.3_1 # --with-libxml # pkg install -y libxslt # --with-libxslt # pkg install -y openldap26-client # --with-ldap # pkg install -y openssl-devel-3.</description>
+    </item>
+    
     <item>
       <title>SmartOS 平台编译 PostgreSQL 数据库</title>
       <link>https://ww-it.github.io/post/how-to-compile-postgres-on-smartos/</link>

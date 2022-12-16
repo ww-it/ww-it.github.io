@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>FreeBSD 平台编译 PostgreSQL 数据库 :: WwIT</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="本文简要介绍如何在 FreeBSD 上搭建 PostgreSQL 开发环境，以及如何编译 PostgreSQL 数据库。
+安装依赖 首先安装依赖，使用下面的命令我们可以安装本次实验所需的依赖，如果您需要添加额外的编译选项，您可能还需要安装其他依赖。
+# pkg install -y gcc11-11.3.0_7 # pkg install -y gmake-4.3_2 # pkg install -y flex-2.6.4_2 # pkg install -y bison-3.8.2,1 # pkg install -y pkgconf # pkg install -y gettext-tools-0.21.1 # pkg install -y icu-72.1,1 # --with-icu # pkg install -y libxml2-2.10.3_1 # --with-libxml # pkg install -y libxslt # --with-libxslt # pkg install -y openldap26-client # --with-ldap # pkg install -y openssl-devel-3." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://ww-it.github.io/post/how-to-compile-postgres-on-freebsd/" />
+
+
+
+
+<link rel="stylesheet" href="https://ww-it.github.io/assets/style.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://ww-it.github.io/img/apple-touch-icon-144-precomposed.png">
+
+  <link rel="shortcut icon" href="https://ww-it.github.io/img/favicon/orange.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="FreeBSD 平台编译 PostgreSQL 数据库 :: WwIT">
+<meta property="og:description" content="本文简要介绍如何在 FreeBSD 上搭建 PostgreSQL 开发环境，以及如何编译 PostgreSQL 数据库。" />
+<meta property="og:url" content="https://ww-it.github.io/post/how-to-compile-postgres-on-freebsd/" />
+<meta property="og:site_name" content="FreeBSD 平台编译 PostgreSQL 数据库" />
+
+  
+    <meta property="og:image" content="https://ww-it.github.io/img/favicon/orange.png">
+  
+
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+
+  <meta property="article:published_time" content="2022-12-14 11:04:48 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="orange">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    WwIT
+  </div>
+</a>
+
+    </div>
+    <div class="menu-trigger">menu</div>
+  </div>
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="https://ww-it.github.io/post/how-to-compile-postgres-on-freebsd/">FreeBSD 平台编译 PostgreSQL 数据库</a></h1>
+  <div class="post-meta">
+    
+      <span class="post-date">
+        2022-12-14 
+      </span>
+    
+    
+    <span class="post-author">:: Japin Li</span>
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="https://ww-it.github.io/tags/postgresql/">PostgreSQL</a>&nbsp;
+    
+    #<a href="https://ww-it.github.io/tags/freebsd/">FreeBSD</a>&nbsp;
+    
+  </span>
+  
+
+  
+
+  
+
+  <div class="post-content"><div>
+        <p>本文简要介绍如何在 FreeBSD 上搭建 PostgreSQL 开发环境，以及如何编译 PostgreSQL 数据库。</p>
+<h2 id="安装依赖">安装依赖<a href="#安装依赖" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>首先安装依赖，使用下面的命令我们可以安装本次实验所需的依赖，如果您需要添加额外的编译选项，您可能还需要安装其他依赖。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># pkg install -y gcc11-11.3.0_7</span>
+<span style="color:#75715e"># pkg install -y gmake-4.3_2</span>
+<span style="color:#75715e"># pkg install -y flex-2.6.4_2</span>
+<span style="color:#75715e"># pkg install -y bison-3.8.2,1</span>
+<span style="color:#75715e"># pkg install -y pkgconf</span>
+<span style="color:#75715e"># pkg install -y gettext-tools-0.21.1</span>
+
+<span style="color:#75715e"># pkg install -y icu-72.1,1               # --with-icu</span>
+<span style="color:#75715e"># pkg install -y libxml2-2.10.3_1         # --with-libxml</span>
+<span style="color:#75715e"># pkg install -y libxslt                  # --with-libxslt</span>
+<span style="color:#75715e"># pkg install -y openldap26-client        # --with-ldap</span>
+<span style="color:#75715e"># pkg install -y openssl-devel-3.0.5      # --with-openssl</span>
+
+<span style="color:#75715e"># pkg install -y p5-IPC-Run-20220807.0    # --enable-tap-tests</span>
+</code></pre></div><h2 id="编译">编译<a href="#编译" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>安装所需依赖之后，我们可以使用下面的命令来编译 PostgreSQL 数据库。根据个人的需求，您可能有不同的编译选项（可能需要安装对应的依赖），本文给出一个简单的编译示例。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
+</span><span style="color:#75715e"></span>
+rm -rf <span style="color:#66d9ef">$(</span>ls | grep -v -E <span style="color:#e6db74">&#34;.*sh</span>$<span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">)</span>
+../configure --prefix<span style="color:#f92672">=</span>$PWD/hhdb <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --enable-cassert <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --enable-debug <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --enable-depend <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --enable-nls <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --enable-rpath <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --enable-tap-tests <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --enable-thread-safety <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-gssapi <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-icu <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-ldap <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-libxml <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-libxslt <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-openssl <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-libedit-preferred <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-pam <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-perl <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-python <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-system-tzdata<span style="color:#f92672">=</span>/usr/share/zoneinfo <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --with-uuid<span style="color:#f92672">=</span>bsd <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  CFLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-ggdb -O0 -ftree-vectorize -pipe -fexceptions -Wl,-rpath,</span>$PWD<span style="color:#e6db74">/hhdb/lib -I/usr/local/include&#34;</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>gmake -j <span style="color:#ae81ff">2</span> -s <span style="color:#f92672">&amp;&amp;</span> gmake install -s <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>cd contrib <span style="color:#f92672">&amp;&amp;</span> gmake -j <span style="color:#ae81ff">2</span> -s <span style="color:#f92672">&amp;&amp;</span> gmake install -s <span style="color:#f92672">&amp;&amp;</span> cd -
+</code></pre></div><p>接着运行 <code>make check-world</code> 跑回归测试。</p>
+<h2 id="运行时环境">运行时环境<a href="#运行时环境" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>编译之后，运行时需要安装的依赖如下所示：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># pkg install -y icu-72.1,1               # --with-icu</span>
+<span style="color:#75715e"># pkg install -y libxml2-2.10.3_1         # --with-libxml</span>
+<span style="color:#75715e"># pkg install -y libxslt                  # --with-libxslt</span>
+<span style="color:#75715e"># pkg install -y openldap26-client        # --with-ldap</span>
+<span style="color:#75715e"># pkg install -y openssl-devel-3.0.5      # --with-openssl</span>
+</code></pre></div>
+      </div></div>
+
+  
+  
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="https://ww-it.github.io/post/how-to-compile-ecox-on-smartos/">
+                <span class="button__text">SmartOS 平台编译 EcoX</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+	      <span>© 2022 <a href="https://w3.ww-it.cn/">ChengDu WenWu Information Technology Co.,Ltd.</a></span>
+    
+      </div>
+  </div>
+</footer>
+
+<script src="https://ww-it.github.io/assets/main.js"></script>
+<script src="https://ww-it.github.io/assets/prism.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
