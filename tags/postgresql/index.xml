@@ -6,7 +6,18 @@
     <description>Recent content in PostgreSQL on WwIT</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 14 Dec 2022 11:04:48 +0800</lastBuildDate><atom:link href="https://ww-it.github.io/tags/postgresql/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 22 Dec 2022 10:35:39 +0800</lastBuildDate><atom:link href="https://ww-it.github.io/tags/postgresql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>EcoX 安装配置</title>
+      <link>https://ww-it.github.io/post/setup-ecox/</link>
+      <pubDate>Thu, 22 Dec 2022 10:35:39 +0800</pubDate>
+      
+      <guid>https://ww-it.github.io/post/setup-ecox/</guid>
+      <description>本文介绍如何在 CentOS 平台上使用 EcoX 搭建 PostgreSQL 高可用集群。这里我们需要使用到 3 个组件：PostgreSQL、ZooKeeper 和 EcoX。
+基本环境 下表给出了本次实验的基本环境，包含 3 个 ZooKeeper 仲裁集群节点和 3 个数据库集群节点。
+   IP 地址 主机名 用途     10.9.10.207 zookeeper01 zookeeper 节点   10.9.10.189 zookeeper02 zookeeper 节点   10.9.10.222 zookeeper03 zookeeper 节点   10.9.10.125 ecox01 数据库节点   10.9.10.202 ecox02 数据库节点   10.9.10.232 ecox03 数据库节点    ZooKeeper 搭建 首先，我们需要搭建 ZooKeeper 集群。ZooKeeper 依赖于 Java，因此，我们需要先安装 Java。</description>
+    </item>
+    
     <item>
       <title>FreeBSD 平台编译 PostgreSQL 数据库</title>
       <link>https://ww-it.github.io/post/how-to-compile-postgres-on-freebsd/</link>

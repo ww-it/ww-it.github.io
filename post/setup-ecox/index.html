@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>EcoX 安装配置 :: WwIT</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="本文介绍如何在 CentOS 平台上使用 EcoX 搭建 PostgreSQL 高可用集群。这里我们需要使用到 3 个组件：PostgreSQL、ZooKeeper 和 EcoX。
+基本环境 下表给出了本次实验的基本环境，包含 3 个 ZooKeeper 仲裁集群节点和 3 个数据库集群节点。
+   IP 地址 主机名 用途     10.9.10.207 zookeeper01 zookeeper 节点   10.9.10.189 zookeeper02 zookeeper 节点   10.9.10.222 zookeeper03 zookeeper 节点   10.9.10.125 ecox01 数据库节点   10.9.10.202 ecox02 数据库节点   10.9.10.232 ecox03 数据库节点    ZooKeeper 搭建 首先，我们需要搭建 ZooKeeper 集群。ZooKeeper 依赖于 Java，因此，我们需要先安装 Java。" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://ww-it.github.io/post/setup-ecox/" />
+
+
+
+
+<link rel="stylesheet" href="https://ww-it.github.io/assets/style.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://ww-it.github.io/img/apple-touch-icon-144-precomposed.png">
+
+  <link rel="shortcut icon" href="https://ww-it.github.io/img/favicon/orange.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="EcoX 安装配置 :: WwIT">
+<meta property="og:description" content="本文介绍如何在 CentOS 平台上使用 EcoX 搭建 PostgreSQL 高可用集群。" />
+<meta property="og:url" content="https://ww-it.github.io/post/setup-ecox/" />
+<meta property="og:site_name" content="EcoX 安装配置" />
+
+  
+    <meta property="og:image" content="https://ww-it.github.io/img/favicon/orange.png">
+  
+
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+
+  <meta property="article:published_time" content="2022-12-22 10:35:39 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="orange">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    WwIT
+  </div>
+</a>
+
+    </div>
+    <div class="menu-trigger">menu</div>
+  </div>
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="https://ww-it.github.io/post/setup-ecox/">EcoX 安装配置</a></h1>
+  <div class="post-meta">
+    
+      <span class="post-date">
+        2022-12-22 
+      </span>
+    
+    
+    <span class="post-author">:: Japin Li</span>
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="https://ww-it.github.io/tags/ecox/">EcoX</a>&nbsp;
+    
+    #<a href="https://ww-it.github.io/tags/centos/">CentOS</a>&nbsp;
+    
+    #<a href="https://ww-it.github.io/tags/zookeeper/">ZooKeeper</a>&nbsp;
+    
+    #<a href="https://ww-it.github.io/tags/postgresql/">PostgreSQL</a>&nbsp;
+    
+  </span>
+  
+
+  
+
+  
+
+  <div class="post-content"><div>
+        <p>本文介绍如何在 CentOS 平台上使用 EcoX 搭建 PostgreSQL 高可用集群。这里我们需要使用到 3 个组件：PostgreSQL、ZooKeeper 和 EcoX。</p>
+<h2 id="基本环境">基本环境<a href="#基本环境" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>下表给出了本次实验的基本环境，包含 3 个 ZooKeeper 仲裁集群节点和 3 个数据库集群节点。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">IP 地址</th>
+<th style="text-align:center">主机名</th>
+<th style="text-align:center">用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">10.9.10.207</td>
+<td style="text-align:center">zookeeper01</td>
+<td style="text-align:center">zookeeper 节点</td>
+</tr>
+<tr>
+<td style="text-align:center">10.9.10.189</td>
+<td style="text-align:center">zookeeper02</td>
+<td style="text-align:center">zookeeper 节点</td>
+</tr>
+<tr>
+<td style="text-align:center">10.9.10.222</td>
+<td style="text-align:center">zookeeper03</td>
+<td style="text-align:center">zookeeper 节点</td>
+</tr>
+<tr>
+<td style="text-align:center">10.9.10.125</td>
+<td style="text-align:center">ecox01</td>
+<td style="text-align:center">数据库节点</td>
+</tr>
+<tr>
+<td style="text-align:center">10.9.10.202</td>
+<td style="text-align:center">ecox02</td>
+<td style="text-align:center">数据库节点</td>
+</tr>
+<tr>
+<td style="text-align:center">10.9.10.232</td>
+<td style="text-align:center">ecox03</td>
+<td style="text-align:center">数据库节点</td>
+</tr>
+</tbody>
+</table>
+<h2 id="zookeeper-搭建">ZooKeeper 搭建<a href="#zookeeper-搭建" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>首先，我们需要搭建 ZooKeeper 集群。ZooKeeper 依赖于 Java，因此，我们需要先安装 Java。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># yum install -y java-1.8.0-openjdk.x86_64</span>
+</code></pre></div><p>接着，我们下载 ZooKeeper 安装包，校验 sha512，并解压安装。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># wget https://dlcdn.apache.org/zookeeper/zookeeper-3.5.10/apache-zookeeper-3.5.10-bin.tar.gz</span>
+<span style="color:#75715e"># sha512sum apache-zookeeper-3.5.10-bin.tar.gz</span>
+fbca82d93fb07534d2cd7d93a399463cfea7e772075285d103e7cda5599d14c2d9996c1e50cc66c7c0dc78f996b20e75b20d74df368eb222dbc3caa0ab2cc14b  apache-zookeeper-3.5.10-bin.tar.gz
+<span style="color:#75715e"># tar xf apache-zookeeper-3.5.10-bin.tar.gz -C /usr/local/</span>
+</code></pre></div><p>配置环境变量和域名解析文件方便后续操作。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># cat &lt;&lt;END &gt; /etc/profile.d/zookeeper.sh</span>
+export ZOO_HOME<span style="color:#f92672">=</span>/usr/local/apache-zookeeper-3.5.10-bin
+export PATH<span style="color:#f92672">=</span><span style="color:#ae81ff">\$</span>ZOO_HOME/bin:<span style="color:#ae81ff">\$</span>PATH
+END
+<span style="color:#75715e"># tail -n 3 /etc/hosts</span>
+10.9.10.207     zookeeper01
+10.9.10.189     zookeeper02
+10.9.10.222     zookeeper03
+</code></pre></div><p>创建用户和组来运行 ZooKeeper，您可能需要根据需要修改用户目录。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># groupadd zook</span>
+<span style="color:#75715e"># useradd -d /home/zook -m -g zook zook</span>
+</code></pre></div><p>切换到 <code>zook</code> 用户，并创建相应的 ZooKeeper 目录。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># su - zook</span>
+$ mkdir -p data/<span style="color:#f92672">{</span>conf,log,datlog,dat<span style="color:#f92672">}</span>
+</code></pre></div><p>创建配置文件，我们可以复制 <code>zoo_sample.cfg</code> 文件并做相应的修改来完成 ZooKeeper 的配置。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cp /usr/local/apache-zookeeper-3.5.10-bin/conf/zoo_sample.cfg $HOME/data/conf/zoo.cfg
+</code></pre></div><p>这里需要修改 <code>dataDir</code> 和 <code>dataLogDir</code> 两个参数，它们分别表示 ZooKeeper 的数据目录和数据日志目录，同时我们还需要增加 ZooKeeper 的节点信息。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">dataDir<span style="color:#f92672">=</span>/home/zook/data/dat
+dataLogDir<span style="color:#f92672">=</span>/home/zook/data/datlog
+<span style="color:#75715e"># 2888 为选举端口，3888 为心跳端口</span>
+server.1<span style="color:#f92672">=</span>zookeeper01:2888:3888
+server.2<span style="color:#f92672">=</span>zookeeper02:2888:3888
+server.3<span style="color:#f92672">=</span>zookeeper03:2888:3888
+</code></pre></div><p>我们还需设置 <code>ZOO_LOG_DIR</code> 来配置 ZooKeeper 运行时的日志（这里是程序日志）。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat <span style="color:#e6db74">&lt;&lt;END &gt;&gt; ~/.bashrc
+</span><span style="color:#e6db74">export ZOO_LOG_DIR=/home/zook/data/log
+</span><span style="color:#e6db74">END</span>
+</code></pre></div><p>然后，我们需要根据 <code>server.N</code> 来创建 <code>myid</code> 文件。我们需要在 ZooKeeper 的数据库目录下创建一个 <code>myid</code> 文件，其中包含一个数字，该数字需要和 <code>server.N</code> 中的配置对应起来。如上所示配置，我们需要在 <code>zookeeper01</code> 这个机器上的 <code>myid</code> 文件内容为 <code>1</code>，<code>zookeeper02</code> 这个机器上的 <code>myid</code> 文件内容为 <code>2</code>，<code>zookeeper03</code> 这个机器上的 <code>myid</code> 文件内容为 <code>3</code>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#75715e"># zookeeper01 节点</span>
+$ echo <span style="color:#ae81ff">1</span> &gt; /home/zook/data/dat/myid
+
+$ <span style="color:#75715e"># zookeeper02 节点</span>
+$ echo <span style="color:#ae81ff">2</span> &gt; /home/zook/data/dat/myid
+
+$ <span style="color:#75715e"># zookeeper03 节点</span>
+$ echo <span style="color:#ae81ff">3</span> &gt; /home/zook/data/dat/myid
+</code></pre></div><p>完成上述配置之后，我们便可以启动 ZooKeeper 集群了。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ zkServer.sh --config $HOME/data/conf start
+/bin/java
+ZooKeeper JMX enabled by default
+Using config: data/conf/zoo.cfg
+Starting zookeeper ... STARTED
+</code></pre></div><p>三个节点都正常启动了，我们可以使用 <code>zkServer.sh --config $HOME/data/conf status</code> 来查看节点的状态。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ zkServer.sh --config $HOME/data/conf status
+/bin/java
+ZooKeeper JMX enabled by default
+Using config: data/conf/zoo.cfg
+Client port found: 2181. Client address: localhost. Client SSL: false.
+Mode: follower
+</code></pre></div><p>我们可以使用 <code>stop</code> 子命令来停止 ZooKeeper 节点。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ zkServer.sh --config $HOME/data/conf stop
+/bin/java
+ZooKeeper JMX enabled by default
+Using config: data/conf/zoo.cfg
+Stopping zookeeper ... STOPPED
+</code></pre></div><p>备注：</p>
+<ol>
+<li>如果您的环境没有外网访问权限，您可以在有外网的主机上通过下面的命令下载相关软件。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># yum install --downloadonly --downloaddir=/tmp/rpms java-1.8.0-openjdk.x86_64</span>
+</code></pre></div></li>
+<li>如果您的环境上已经安装了，可以使用下面的命令来下载 rpm 安装包。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># yum reinstall --downloadonly --downloaddir=/tmp/rpms java-1.8.0-openjdk.x86_64</span>
+</code></pre></div></li>
+<li>在上述的配置中我采用了局部配置的方式，缺点是启动、停止等比较麻烦（需要带上 <code>--config</code> 选项），您可以通过全局配置来避免这一点。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># cp /usr/local/apache-zookeeper-3.5.10-bin/conf/zoo_sample.cfg /usr/local/apache-zookeeper-3.5.10-bin/conf/zoo.cfg</span>
+</code></pre></div><p>通过修改全局配置文件 <code>/usr/local/apache-zookeeper-3.5.10-bin/conf/zoo.cfg</code> 来配置 ZooKeeper，这样在启动的时候就可以不需要带上 <code>--config</code> 选项了，同时我们还可以修改 <code>/usr/local/apache-zookeeper-3.5.10-bin/conf/log4j.properties</code> 配置文件来指定程序日志的路径。</p>
+</li>
+</ol>
+<h2 id="安装-postgresql">安装 PostgreSQL<a href="#安装-postgresql" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>现在我们需要来安装 PostgreSQL 数据库了，您可以参考<a href="https://www.postgresql.org/download/linux/redhat/">官方文档</a>安装。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm</span>
+<span style="color:#75715e"># yum install -y postgresql14-server</span>
+</code></pre></div><p>PostgreSQL 相关的命令安装在 <code>/usr/pgsql-14</code> 目录下面，同时将会新建一个 <code>postgres</code> 用户。</p>
+<h2 id="部署-ecox">部署 EcoX<a href="#部署-ecox" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="ecox-依赖">EcoX 依赖<a href="#ecox-依赖" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>EcoX 依赖于 <code>ifconfig</code> 和 <code>arping</code> 命令，因此，我们需要先安装这些工具。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># yum -y install iputils.x86_64 net-tools.x86_64</span>
+</code></pre></div><p>EcoX 内部执行某些命令时需要使用到 <code>sudo</code> 进行提取，因此还需要安装 <code>sudo</code> 工具，同时将运行 EcoX 的用户添加到 <code>sudoer</code> 中，这里我们将以 <code>postgres</code> 用户执行 EcoX。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># visudo</span>
+
+postgres ALL<span style="color:#f92672">=(</span>ALL<span style="color:#f92672">)</span>	NOPASSWD: ALL
+</code></pre></div><p>关闭防火墙，否则 EcoX 在做 <code>pg_rewind</code> 时可能会出错，最好的做法是配置相应的防火墙规则。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># systemctl stop firewalld</span>
+<span style="color:#75715e"># systemctl disable firewalld</span>
+</code></pre></div><p>接着安装 EcoX 软件。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># rpm -ivh EcoX-5.13-1.el7.centos.x86_64.rpm</span>
+</code></pre></div><p>EcoX 将安装在 <code>/usr/EcoX</code> 目录下，同时，在 <code>postgres</code> 用户下配置 EcoX 环境变量。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat <span style="color:#e6db74">&lt;&lt;END &gt;&gt; ~/.bash_profile
+</span><span style="color:#e6db74">export PATH=/usr/EcoX/bin:\$PATH
+</span><span style="color:#e6db74">export LD_LIBRARY_PATH=/usr/EcoX/lib:\$LD_LIBRARY_PATH
+</span><span style="color:#e6db74">END</span>
+</code></pre></div><p>现在，EcoX 已经安装完成，接下来我们配置 PostgreSQL 集群。</p>
+<h3 id="ecox-配置运行">EcoX 配置运行<a href="#ecox-配置运行" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>首先修改 EcoX 配置文件 <code>/usr/EcoX/etc/ecox.conf</code>，我们可以从模版配置文件拷贝一份，然后对其进行配置。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># cp /usr/EcoX/etc/ecox.conf.sample /usr/EcoX/etc/ecox.conf</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">root=/EcoX
+cluster=WwIT
+
+# ZooKeeper 集群连接地址
+zkhost=10.9.10.207:2181,10.9.10.189:2181,10.9.10.222:2181
+zktimeout=9000
+
+pgcomaster_num=2
+auto_promote_slave=true
+use_watch_dog=ture
+
+log_filename=/var/lib/pgsql/ecox.log
+log_level=info
+
+# 数据库监听地址，节点配置成各自的 IP 地址
+pghost=10.9.10.125
+# PostgreSQL 二进制所在路径
+pgbin=/usr/pgsql-14/bin
+# PostgreSQL 数据库监听端口
+pgport=5433
+# PostgreSQL 数据目录
+pgdata=/var/lib/pgsql/pgdata
+
+# 允许哪些网段访问数据库，目前只支持配置一个网段，该参数只在需要通过
+# EcoX 初始化数据库情况下，写入 pg_hba.conf 时使用
+pgclient_net=10.9.0.0/16
+
+# 数据库集群中节点之前数据同步使用的网络，该参数只在需要通过 EcoX 初
+# 始化数据库情况下，写入 pg_hba.conf 时使用
+pgcluster_net=10.9.0.0/16
+
+# 主节点是否开启 VIP 功能，VIP 随着主节点的切换而飘移（用于读写操作）
+do_not_use_vip=true
+
+# 直接修改物理网卡的 IP，还是使用物理网卡的虚拟网卡（如 eth0:1）
+is_vip_use_real_interface=false
+eth_port=eth0
+virtual_ip=10.9.10.201
+netmask=255.255.255.0
+
+# 从节点是否开启 VIP 功能，VIP 只在 comaster 之间飘移（用于只读操作）
+do_not_use_comaster_vip=true
+comaster_eth_port=eth0
+comaster_virtual_ip=10.10.56.234
+comaster_netmask=255.255.255.0
+</code></pre></div><p>由于 EcoX 需要将进程的 PID 写入到 <code>/usr/EcoX/share/EcoX.pid</code> 中和节点信息写入到 <code>/usr/EcoX/share/node.rd</code> 中，因此，我们需要赋予其适当的权限。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># chown -R postgres:postgres /usr/EcoX/</span>
+</code></pre></div><p>现在，一切准备就绪，我们使用 <code>EcoX --start</code> 命令来启动 PostgreSQL 集群。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ EcoX --start
+<span style="color:#f92672">[</span>...<span style="color:#f92672">]</span>
+PostgreSQL 14.* is compatible
+Waiting <span style="color:#66d9ef">for</span> database starting ....2022-12-23 09:27:43.488 UTC <span style="color:#f92672">[</span>711017<span style="color:#f92672">]</span> LOG:  00000: redirecting log output to logging collector process
+2022-12-23 09:27:43.488 UTC <span style="color:#f92672">[</span>711017<span style="color:#f92672">]</span> HINT:  Future log output will appear in directory <span style="color:#e6db74">&#34;log&#34;</span>.
+2022-12-23 09:27:43.488 UTC <span style="color:#f92672">[</span>711017<span style="color:#f92672">]</span> LOCATION:  SysLogger_Start, syslogger.c:674
+<span style="color:#66d9ef">done</span>
+database start successed
+</code></pre></div><p>这是一个前台运行的命令，您可以使用封装后的 service 服务来运行。所有节点启动完成之后，可以使用下面的命令查看集群状态：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ EcoX --show cluster
+ node name     :  ip address  |  port  |  online
+----------------------------------------------------------
+*node0000000000:  10.9.10.125  |  <span style="color:#ae81ff">5433</span>  |  TRUE
+ node0000000001:  10.9.10.202  |  <span style="color:#ae81ff">5433</span>  |  TRUE
+ node0000000002:  10.9.10.232  |  <span style="color:#ae81ff">5433</span>  |  TRUE
+master     : node0000000000
+comaster  1: node0000000001
+comaster  2: node0000000002
+last master: node0000000000
+sync replication :node0000000001
+</code></pre></div><p>备注：</p>
+<ol>
+<li>如果是 SUSE 系统，在普通用户下执行 <code>ifconfig</code> 会报权限不足，您可以执行下面的命令解决这个问题。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># ln -s /sbin/ifconfig /usr/bin/ifconfig</span>
+</code></pre></div></li>
+<li>云平台 lx 虚拟机不支持虚拟 IP。</li>
+</ol>
+
+      </div></div>
+
+  
+  
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="https://ww-it.github.io/post/how-to-compile-postgres-on-freebsd/">
+                <span class="button__text">FreeBSD 平台编译 PostgreSQL 数据库</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+	      <span>© 2022 <a href="https://w3.ww-it.cn/">ChengDu WenWu Information Technology Co.,Ltd.</a></span>
+    
+      </div>
+  </div>
+</footer>
+
+<script src="https://ww-it.github.io/assets/main.js"></script>
+<script src="https://ww-it.github.io/assets/prism.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
