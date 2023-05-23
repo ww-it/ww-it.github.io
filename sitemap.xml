@@ -2,6 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://ww-it.github.io/tags/debian/</loc>
+    <lastmod>2023-05-23T16:19:35+08:00</lastmod>
+  </url><url>
+    <loc>https://ww-it.github.io/post/sqlite-cross-compile-on-debian/</loc>
+    <lastmod>2023-05-23T16:19:35+08:00</lastmod>
+  </url><url>
+    <loc>https://ww-it.github.io/post/</loc>
+    <lastmod>2023-05-23T16:19:35+08:00</lastmod>
+  </url><url>
+    <loc>https://ww-it.github.io/tags/sqlite/</loc>
+    <lastmod>2023-05-23T16:19:35+08:00</lastmod>
+  </url><url>
+    <loc>https://ww-it.github.io/tags/</loc>
+    <lastmod>2023-05-23T16:19:35+08:00</lastmod>
+  </url><url>
+    <loc>https://ww-it.github.io/</loc>
+    <lastmod>2023-05-23T16:19:35+08:00</lastmod>
+  </url><url>
     <loc>https://ww-it.github.io/tags/centos/</loc>
     <lastmod>2022-12-22T10:35:39+08:00</lastmod>
   </url><url>
@@ -12,15 +30,6 @@
     <lastmod>2022-12-22T10:35:39+08:00</lastmod>
   </url><url>
     <loc>https://ww-it.github.io/tags/postgresql/</loc>
-    <lastmod>2022-12-22T10:35:39+08:00</lastmod>
-  </url><url>
-    <loc>https://ww-it.github.io/post/</loc>
-    <lastmod>2022-12-22T10:35:39+08:00</lastmod>
-  </url><url>
-    <loc>https://ww-it.github.io/tags/</loc>
-    <lastmod>2022-12-22T10:35:39+08:00</lastmod>
-  </url><url>
-    <loc>https://ww-it.github.io/</loc>
     <lastmod>2022-12-22T10:35:39+08:00</lastmod>
   </url><url>
     <loc>https://ww-it.github.io/tags/zookeeper/</loc>
@@ -42,9 +51,6 @@
     <lastmod>2022-11-25T11:09:20+08:00</lastmod>
   </url><url>
     <loc>https://ww-it.github.io/tags/qt/</loc>
-    <lastmod>2022-05-17T11:01:07+08:00</lastmod>
-  </url><url>
-    <loc>https://ww-it.github.io/tags/sqlite/</loc>
     <lastmod>2022-05-17T11:01:07+08:00</lastmod>
   </url><url>
     <loc>https://ww-it.github.io/tags/ubuntu/</loc>

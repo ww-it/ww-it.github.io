@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>SQLite on WwIT</title>
-    <link>https://ww-it.github.io/tags/sqlite/</link>
-    <description>Recent content in SQLite on WwIT</description>
+    <title>Debian on WwIT</title>
+    <link>https://ww-it.github.io/tags/debian/</link>
+    <description>Recent content in Debian on WwIT</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 May 2023 16:19:35 +0800</lastBuildDate><atom:link href="https://ww-it.github.io/tags/sqlite/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 May 2023 16:19:35 +0800</lastBuildDate><atom:link href="https://ww-it.github.io/tags/debian/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Debian 平台交叉编译 SQLite</title>
       <link>https://ww-it.github.io/post/sqlite-cross-compile-on-debian/</link>
@@ -19,17 +19,6 @@ sudo apt install gcc make gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu 安�
 #include &amp;lt;stdio.h&amp;gt; int main(void) { printf(&amp;#34;Hello world\n&amp;#34;); return 0; } 我们将上面的内容保存在 hello.c 文件中，首先编译本地版本，即 x86_64：
 $ gcc -o hello-x86_64 hello.c $ file hello-x86_64 hello-x86_64: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8a0910c4b9f9808b7f8af9b26ed9e74a98e79c9b, for GNU/Linux 3.2.0, not stripped 我们可以执行该程序检查结果。
 $ ./hello-x86_64 Hello world 接下来，我们使用该源码编译 ARM64 平台的程序。</description>
-    </item>
-    
-    <item>
-      <title>Ubuntu 平台交叉编译 Qt SQLite 动态库</title>
-      <link>https://ww-it.github.io/post/qt-everywhere-cross-compile-with-sqlite/</link>
-      <pubDate>Tue, 17 May 2022 11:01:07 +0800</pubDate>
-      
-      <guid>https://ww-it.github.io/post/qt-everywhere-cross-compile-with-sqlite/</guid>
-      <description>本文简要记录一下如何在 Ubuntu 平台交叉编译 MIPS 平台的 Qt SQLite 动态库。
-交叉编译工具 首先，我们需要安装交叉编译工具。我们使用 mips-gcc520-glibc222.tgz 二进制包进行安装。
-$ tar xf mips-gcc520-glibc222.tgz -C /opt $ ls -al /opt/mips-gcc520-glibc222/ total 44 drwxr-xr-x 8 root root 4096 Mar 16 2018 . drwxr-xr-x 3 root root 4096 May 16 11:31 .. drwxr-xr-x 2 root root 4096 Jun 6 2019 bin drwxr-xr-x 3 root root 4096 Mar 16 2018 i686-pc-linux-gnu drwxr-xr-x 3 root root 4096 Mar 16 2018 lib drwxr-xr-x 3 root root 4096 Mar 16 2018 libexec drwxr-xr-x 7 root root 4096 Mar 16 2018 mips-linux-gnu drwxr-xr-x 5 root root 4096 Mar 16 2018 share -rw-r--r-- 1 root root 2613 Mar 16 2018 .</description>
     </item>
     
   </channel>

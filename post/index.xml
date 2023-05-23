@@ -6,7 +6,21 @@
     <description>Recent content in Posts on WwIT</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 22 Dec 2022 10:35:39 +0800</lastBuildDate><atom:link href="https://ww-it.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 May 2023 16:19:35 +0800</lastBuildDate><atom:link href="https://ww-it.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Debian 平台交叉编译 SQLite</title>
+      <link>https://ww-it.github.io/post/sqlite-cross-compile-on-debian/</link>
+      <pubDate>Tue, 23 May 2023 16:19:35 +0800</pubDate>
+      
+      <guid>https://ww-it.github.io/post/sqlite-cross-compile-on-debian/</guid>
+      <description>本文简要记录如何在 Debian 平台上交叉编译 SQLite 数据库。
+准备 在编译之前需要先安装基本的编译工具，本文我们将在 x86_64 平台下交叉编译 ARM64 程序，因此需要安装 ARM64 平台的 GCC 编译工具。您可以使用下面的命令进行安装：
+sudo apt install gcc make gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu 安装完成之后，使用下面的程序进行验证。
+#include &amp;lt;stdio.h&amp;gt; int main(void) { printf(&amp;#34;Hello world\n&amp;#34;); return 0; } 我们将上面的内容保存在 hello.c 文件中，首先编译本地版本，即 x86_64：
+$ gcc -o hello-x86_64 hello.c $ file hello-x86_64 hello-x86_64: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8a0910c4b9f9808b7f8af9b26ed9e74a98e79c9b, for GNU/Linux 3.2.0, not stripped 我们可以执行该程序检查结果。
+$ ./hello-x86_64 Hello world 接下来，我们使用该源码编译 ARM64 平台的程序。</description>
+    </item>
+    
     <item>
       <title>EcoX 安装配置</title>
       <link>https://ww-it.github.io/post/setup-ecox/</link>
