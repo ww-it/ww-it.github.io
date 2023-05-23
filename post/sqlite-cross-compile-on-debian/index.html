@@ -128,7 +128,7 @@ $ ./hello-x86_64 Hello world 接下来，我们使用该源码编译 ARM64 平�
 <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">void</span>)
 {
     printf(<span style="color:#e6db74">&#34;Hello world</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 }
 </code></pre></div><p>我们将上面的内容保存在 <code>hello.c</code> 文件中，首先编译本地版本，即 <code>x86_64</code>：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ gcc -o hello-x86_64 hello.c
@@ -166,12 +166,12 @@ arm64
 <p>准备好依赖之后，我们便可以进行交叉编译了。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ../configure <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    --target<span style="color:#f92672">=</span>aarch64-linux <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>	--host<span style="color:#f92672">=</span>aarch64-linux <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    --host<span style="color:#f92672">=</span>aarch64-linux <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    --prefix<span style="color:#f92672">=</span>/root/sqlite/build <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    CFLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;-g -march=armv8-a -O2 -ftree-loop-vectorize -lcrypto&#39;</span> <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>	LDFLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;-static&#39;</span> <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>	CPP<span style="color:#f92672">=</span>/usr/bin/aarch64-linux-gnu-cpp <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>	CC<span style="color:#f92672">=</span>/usr/bin/aarch64-linux-gnu-gcc
+</span><span style="color:#ae81ff"></span>    LDFLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;-static&#39;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    CPP<span style="color:#f92672">=</span>/usr/bin/aarch64-linux-gnu-cpp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    CC<span style="color:#f92672">=</span>/usr/bin/aarch64-linux-gnu-gcc
 $ make -j <span style="color:#66d9ef">$(</span>nproc<span style="color:#66d9ef">)</span> -s
 $ make install -s
 </code></pre></div><h2 id="参考">参考<a href="#参考" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
