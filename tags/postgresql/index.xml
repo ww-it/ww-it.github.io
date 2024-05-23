@@ -39,7 +39,7 @@
 准备工作 这里我们通过 git 来拉取代码，因此首先安装 git 程序。
 # pkgin in git 接着，创建一个普通用户来编译测试 PostgreSQL 数据库。
 # useradd -m -d /home/hunghu -s /bin/bash hunghu # passwd hunghu 安装依赖 通过源码编译安装，我们需要安装一些基本的工具，如 gcc, make 等，我们使用下面的命令进行安装。
-# pkgin -y in gcc10-10.3.0 # pkgin -y in gmake # pkgin -y in flex bison # pkgin -y in pkgconf # pkgin -y in icu # --with-icu # pkgin -y in libuuid # --with-uuid=e2fs # pkgin -y in libxml2 # --with-libxml # pkgin -y in libxslt # --with-libxslt # pkgin -y in llvm clang # --with-llvm # pkgin -y in openssl # --with-openssl # pkgin -y in pam-krb5 # --with-gssapi # pkgin -y in readline # --with-readline 编译完成之后，我们需要跑 TAP 测试，因此需要安装 TAP 测试套件。</description>
+# pkgin -y in gcc10 # pkgin -y in gmake # pkgin -y in flex bison # pkgin -y in pkgconf # pkgin -y in icu # --with-icu # pkgin -y in libuuid # --with-uuid=e2fs # pkgin -y in libxml2 # --with-libxml # pkgin -y in libxslt # --with-libxslt # pkgin -y in llvm clang # --with-llvm # pkgin -y in openssl # --with-openssl # pkgin -y in pam-krb5 # --with-gssapi # pkgin -y in readline # --with-readline 编译完成之后，我们需要跑 TAP 测试，因此需要安装 TAP 测试套件。</description>
     </item>
     
     <item>
